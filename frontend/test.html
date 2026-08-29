@@ -21,6 +21,10 @@
 
     <button id="sendButton">Send</button>
 
+    <br><br>
+
+    <button id="voiceButton">🎤 Start Listening</button>
+
     <p id="status">🔴 Disconnected</p>
 
     <script>
@@ -35,9 +39,16 @@
         const messageInput =
             document.getElementById("messageInput");
 
+        const voiceButton =
+            document.getElementById("voiceButton");
+
         const status =
             document.getElementById("status");
 
+
+        // -------------------------------
+        // WEBSOCKET CONNECTION
+        // -------------------------------
 
         connectButton.addEventListener("click", () => {
 
@@ -70,6 +81,10 @@
         });
 
 
+        // -------------------------------
+        // SEND TEXT MESSAGE
+        // -------------------------------
+
         sendButton.addEventListener("click", () => {
 
             if (
@@ -93,6 +108,83 @@
 
             }
         });
+
+
+        // -------------------------------
+        // VOICE RECOGNITION
+        // -------------------------------
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+
+            alert("Speech recognition is not supported in this browser.");
+
+        } else {
+
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = "en-US";
+
+            recognition.continuous = false;
+
+            recognition.interimResults = false;
+
+
+            recognition.onstart = () => {
+
+                console.log("Listening...");
+
+                voiceButton.textContent = "🛑 Listening...";
+
+                status.textContent = "🎤 Listening...";
+            };
+
+
+            recognition.onresult = (event) => {
+
+                const transcript =
+                    event.results[0][0].transcript;
+
+                console.log("You said:", transcript);
+
+                messageInput.value = transcript;
+
+            };
+
+
+            recognition.onend = () => {
+
+                console.log("Stopped listening");
+
+                voiceButton.textContent =
+                    "🎤 Start Listening";
+
+            };
+
+
+            recognition.onerror = (event) => {
+
+                console.error(
+                    "Speech recognition error:",
+                    event.error
+                );
+
+                status.textContent =
+                    "❌ Voice Error: " + event.error;
+
+            };
+
+
+            voiceButton.addEventListener("click", () => {
+
+                recognition.start();
+
+            });
+
+        }
 
     </script>
 
