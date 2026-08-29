@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+</head>
+
+<body>
+
+    <h1>🎤 Voice Assistant</h1>
+
+    <button id="connectButton">Connect</button>
+    <button id="sendButton">Send Message</button>
+
+    <p id="status">Disconnected</p>
+
+    <script>
+        let socket;
+
+        const connectButton = document.getElementById("connectButton");
+        const sendButton = document.getElementById("sendButton");
+        const status = document.getElementById("status");
+
+        connectButton.addEventListener("click", () => {
+
+            socket = new WebSocket("ws://127.0.0.1:8000/ws");
+
+            socket.onopen = () => {
+                console.log("Connected to backend!");
+                status.textContent = "🟢 Connected";
+            };
+
+            socket.onmessage = (event) => {
+                console.log("Backend:", event.data);
+                status.textContent = event.data;
+            };
+
+            socket.onclose = () => {
+                console.log("Disconnected!");
+                status.textContent = "🔴 Disconnected";
+            };
+
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+                status.textContent = "❌ WebSocket Error";
+            };
+        });
+
+
+        sendButton.addEventListener("click", () => {
+
+            if (socket && socket.readyState === WebSocket.OPEN) {
+
+                socket.send("Hello from the browser!");
+
+            } else {
+
+                alert("Connect to the backend first!");
+
+            }
+        });
+    </script>
+
+</body>
+</html>
