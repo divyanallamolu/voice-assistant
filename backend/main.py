@@ -1,5 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 
+from backend.assistant.core import get_response
+
 app = FastAPI()
 
 
@@ -18,11 +20,13 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             message = await websocket.receive_text()
 
-            print(f"Received: {message}")
+            print(f"User: {message}")
 
-            await websocket.send_text(
-                f"Backend received: {message}"
-            )
+            response = get_response(message)
+
+            print(f"Assistant: {response}")
+
+            await websocket.send_text(response)
 
     except WebSocketDisconnect:
         print("Client disconnected!")
