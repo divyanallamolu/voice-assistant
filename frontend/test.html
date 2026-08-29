@@ -1,106 +1,263 @@
-// -------------------------------
-// VOICE RECOGNITION
-// -------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Voice Assistant</title>
+</head>
 
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+<body>
 
-let isListening = false;
+    <h1>🎤 Voice Assistant</h1>
 
-if (!SpeechRecognition) {
+    <button id="connectButton">Connect</button>
 
-    alert("Speech recognition is not supported in this browser.");
+    <br><br>
 
-} else {
+    <input
+        type="text"
+        id="messageInput"
+        placeholder="Type your message..."
+    >
 
-    const recognition = new SpeechRecognition();
+    <button id="sendButton">Send</button>
 
-    recognition.lang = "en-US";
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    <br><br>
 
-    recognition.onstart = () => {
+    <button id="voiceButton">🎤 Start Listening</button>
 
-        isListening = true;
+    <p id="status">🔴 Disconnected</p>
 
-        console.log("Listening...");
 
-        voiceButton.textContent = "🛑 Listening...";
-        status.textContent = "🎤 Listening...";
-    };
+    <script>
 
-    recognition.onresult = (event) => {
+        let socket;
 
-        const transcript =
-            event.results[0][0].transcript;
+        const connectButton =
+            document.getElementById("connectButton");
 
-        console.log("You said:", transcript);
+        const sendButton =
+            document.getElementById("sendButton");
 
-        messageInput.value = transcript;
+        const messageInput =
+            document.getElementById("messageInput");
 
-        // Send voice input to backend
-        if (
-            socket &&
-            socket.readyState === WebSocket.OPEN
-        ) {
+        const voiceButton =
+            document.getElementById("voiceButton");
 
-            socket.send(transcript);
+        const status =
+            document.getElementById("status");
+
+
+        // WEBSOCKET
+
+        connectButton.addEventListener("click", () => {
+
+            socket = new WebSocket(
+                "ws://127.0.0.1:8000/ws"
+            );
+
+            socket.onopen = () => {
+
+                console.log("Connected!");
+
+                status.textContent = "🟢 Connected";
+
+            };
+
+
+            socket.onmessage = (event) => {
+
+                console.log("Assistant:", event.data);
+
+                status.textContent =
+                    "🤖 " + event.data;
+
+            };
+
+
+            socket.onclose = () => {
+
+                console.log("Disconnected!");
+
+                status.textContent =
+                    "🔴 Disconnected";
+
+            };
+
+
+            socket.onerror = (error) => {
+
+                console.error(
+                    "WebSocket error:",
+                    error
+                );
+
+                status.textContent =
+                    "❌ WebSocket Error";
+
+            };
+
+        });
+
+
+        // TEXT MESSAGE
+
+        sendButton.addEventListener("click", () => {
+
+            if (
+                socket &&
+                socket.readyState === WebSocket.OPEN
+            ) {
+
+                const message =
+                    messageInput.value.trim();
+
+                if (message === "") {
+                    return;
+                }
+
+                socket.send(message);
+
+                messageInput.value = "";
+
+            } else {
+
+                alert(
+                    "Connect to the backend first!"
+                );
+
+            }
+
+        });
+
+
+        // SPEECH RECOGNITION
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+
+        let isListening = false;
+
+
+        if (!SpeechRecognition) {
+
+            alert(
+                "Speech recognition is not supported."
+            );
 
         } else {
 
-            alert("Connect to the backend first!");
+            const recognition =
+                new SpeechRecognition();
+
+
+            recognition.lang = "en-US";
+
+            recognition.continuous = false;
+
+            recognition.interimResults = false;
+
+
+            recognition.onstart = () => {
+
+                isListening = true;
+
+                console.log("Listening...");
+
+                voiceButton.textContent =
+                    "🛑 Listening...";
+
+                status.textContent =
+                    "🎤 Listening...";
+
+            };
+
+
+            recognition.onresult = (event) => {
+
+                const transcript =
+                    event.results[0][0].transcript;
+
+                console.log(
+                    "You said:",
+                    transcript
+                );
+
+                messageInput.value =
+                    transcript;
+
+
+                // Send voice text to backend
+
+                if (
+                    socket &&
+                    socket.readyState === WebSocket.OPEN
+                ) {
+
+                    socket.send(transcript);
+
+                } else {
+
+                    alert(
+                        "Connect to the backend first!"
+                    );
+
+                }
+
+            };
+
+
+            recognition.onend = () => {
+
+                isListening = false;
+
+                console.log(
+                    "Stopped listening"
+                );
+
+                voiceButton.textContent =
+                    "🎤 Start Listening";
+
+            };
+
+
+            recognition.onerror = (event) => {
+
+                isListening = false;
+
+                console.error(
+                    "Speech error:",
+                    event.error
+                );
+
+                voiceButton.textContent =
+                    "🎤 Start Listening";
+
+            };
+
+
+            voiceButton.addEventListener(
+                "click",
+                () => {
+
+                    if (isListening) {
+
+                        recognition.stop();
+
+                    } else {
+
+                        recognition.start();
+
+                    }
+
+                }
+            );
 
         }
-    };
 
-    recognition.onend = () => {
+    </script>
 
-        isListening = false;
-
-        console.log("Stopped listening");
-
-        voiceButton.textContent =
-            "🎤 Start Listening";
-
-        if (
-            socket &&
-            socket.readyState === WebSocket.OPEN
-        ) {
-
-            status.textContent = "🟢 Connected";
-
-        }
-    };
-
-    recognition.onerror = (event) => {
-
-        isListening = false;
-
-        console.error(
-            "Speech recognition error:",
-            event.error
-        );
-
-        voiceButton.textContent =
-            "🎤 Start Listening";
-
-        status.textContent =
-            "❌ Voice Error: " + event.error;
-    };
-
-    voiceButton.addEventListener("click", () => {
-
-        if (isListening) {
-
-            recognition.stop();
-
-        } else {
-
-            recognition.start();
-
-        }
-
-    });
-
-}
+</body>
+</html>
