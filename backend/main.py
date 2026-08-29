@@ -22,11 +22,18 @@ async def websocket_endpoint(websocket: WebSocket):
 
             print(f"User: {message}")
 
-            response = get_response(message)
+            try:
+                response = get_response(message)
 
-            print(f"Assistant: {response}")
+                print(f"Assistant: {response}")
 
-            await websocket.send_text(response)
+                await websocket.send_text(response)
+
+            except Exception as e:
+                print("GEMINI ERROR:", e)
+                await websocket.send_text(
+                    "Sorry, something went wrong while generating the answer."
+                )
 
     except WebSocketDisconnect:
         print("Client disconnected!")
