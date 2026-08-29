@@ -20,7 +20,6 @@ if (!SpeechRecognition) {
     recognition.continuous = false;
     recognition.interimResults = false;
 
-
     recognition.onstart = () => {
 
         isListening = true;
@@ -28,10 +27,8 @@ if (!SpeechRecognition) {
         console.log("Listening...");
 
         voiceButton.textContent = "🛑 Listening...";
-
         status.textContent = "🎤 Listening...";
     };
-
 
     recognition.onresult = (event) => {
 
@@ -41,7 +38,6 @@ if (!SpeechRecognition) {
         console.log("You said:", transcript);
 
         messageInput.value = transcript;
-
 
         // Send voice input to backend
         if (
@@ -58,7 +54,6 @@ if (!SpeechRecognition) {
         }
     };
 
-
     recognition.onend = () => {
 
         isListening = false;
@@ -68,7 +63,6 @@ if (!SpeechRecognition) {
         voiceButton.textContent =
             "🎤 Start Listening";
 
-        // Don't change status if WebSocket is still connected
         if (
             socket &&
             socket.readyState === WebSocket.OPEN
@@ -78,7 +72,6 @@ if (!SpeechRecognition) {
 
         }
     };
-
 
     recognition.onerror = (event) => {
 
@@ -95,7 +88,6 @@ if (!SpeechRecognition) {
         status.textContent =
             "❌ Voice Error: " + event.error;
     };
-
 
     voiceButton.addEventListener("click", () => {
 
