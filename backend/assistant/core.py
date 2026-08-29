@@ -1,26 +1,18 @@
+import os
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+
 def get_response(message: str) -> str:
-    message = message.lower().strip()
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=message
+    )
 
-    if message == "hello" or message == "hi":
-        return "Hello! How can I help you?"
-
-    elif "your name" in message:
-        return "I am your voice assistant."
-
-    elif "how are you" in message:
-        return "I'm doing great! Thanks for asking."
-
-    elif "what can you do" in message:
-        return "I can answer simple questions and help you with basic tasks."
-
-    elif "good morning" in message:
-        return "Good morning! Have a great day."
-
-    elif "thank you" in message or "thanks" in message:
-        return "You're welcome!"
-
-    elif "bye" in message:
-        return "Goodbye! Have a nice day."
-
-    else:
-        return f"You said: {message}"
+    return response.text or "Sorry, I couldn't generate a response."
