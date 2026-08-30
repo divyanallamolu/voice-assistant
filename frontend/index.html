@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS — Voice Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="state-disconnected">
+
+    <div class="hud-background">
+        <div class="grid-overlay"></div>
+        <div class="radial-glow"></div>
+        <div class="scan-line"></div>
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
+        <div class="particle p4"></div>
+        <div class="particle p5"></div>
+    </div>
+
+    <div class="corner-bracket tl"></div>
+    <div class="corner-bracket tr"></div>
+    <div class="corner-bracket bl"></div>
+    <div class="corner-bracket br"></div>
+
+    <div class="hud-label hud-label-tl">SYSTEM ONLINE</div>
+    <div class="hud-label hud-label-tr">VOICE CHANNEL</div>
+    <div class="hud-label hud-label-bl">AUDIO STREAM</div>
+    <div class="hud-label hud-label-br">AI CORE</div>
+
+    <div class="hud-ring hud-ring-left"></div>
+    <div class="hud-ring hud-ring-right"></div>
+
+    <div class="app-container">
+
+        <header class="hero">
+            <div class="hero-line"></div>
+            <h1 class="hero-title">JARVIS</h1>
+            <p class="hero-subtitle">ADVANCED VOICE INTELLIGENCE SYSTEM</p>
+            <div class="connection-bar">
+                <span class="connection-dot" id="connectionDot"></span>
+                <span class="connection-label" id="status">DISCONNECTED</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+
+            <section class="core-section">
+                <div class="ai-core" id="aiCore">
+                    <div class="core-outer-glow"></div>
+                    <div class="core-ring ring-1"></div>
+                    <div class="core-ring ring-2"></div>
+                    <div class="core-ring ring-3"></div>
+                    <div class="core-ring ring-4"></div>
+                    <div class="core-center">
+                        <div class="core-pulse"></div>
+                    </div>
+                </div>
+
+                <button id="voiceButton" class="mic-button" type="button" aria-label="Toggle microphone">
+                    <span class="mic-button-ring"></span>
+                    <span class="mic-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+                            <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+                            <line x1="12" y1="18" x2="12" y2="22"/>
+                            <line x1="8" y1="22" x2="16" y2="22"/>
+                        </svg>
+                    </span>
+                    <span class="mic-label" id="micLabel">START LISTENING</span>
+                </button>
+            </section>
+
+            <section class="panels-grid">
+
+                <div class="panel status-panel">
+                    <div class="panel-header">
+                        <span class="panel-bracket">[</span>
+                        <h2>SYSTEM STATUS</h2>
+                        <span class="panel-bracket">]</span>
+                    </div>
+                    <div class="panel-body">
+                        <p class="system-status" id="systemStatus">● OFFLINE</p>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="hud-tag">STT ENGINE</span>
+                        <span class="hud-tag">LLM ENGINE</span>
+                    </div>
+                </div>
+
+                <div class="panel transcript-panel">
+                    <div class="panel-header">
+                        <span class="panel-bracket">[</span>
+                        <h2>LIVE TRANSCRIPT</h2>
+                        <span class="panel-bracket">]</span>
+                    </div>
+                    <div class="panel-body panel-scanlines">
+                        <div id="liveTranscript" class="transcript-content">
+                            <span class="transcript-prefix">🎤</span>
+                            <span class="transcript-text">Awaiting voice input...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel tool-panel">
+                    <div class="panel-header">
+                        <span class="panel-bracket">[</span>
+                        <h2>TOOL STATUS</h2>
+                        <span class="panel-bracket">]</span>
+                    </div>
+                    <div class="panel-body panel-scanlines">
+                        <div id="toolStatus" class="tool-status-content">
+                            <span class="tool-icon">🔧</span>
+                            <span class="tool-label">TOOL</span>
+                            <span class="tool-name" id="toolName">STANDBY</span>
+                            <span class="tool-state" id="toolState">READY</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel reminder-panel">
+                    <div class="panel-header">
+                        <span class="panel-bracket">[</span>
+                        <h2>REMINDERS</h2>
+                        <span class="panel-bracket">]</span>
+                    </div>
+                    <div class="panel-body panel-scanlines">
+                        <div id="reminderFeed" class="reminder-feed">
+                            No active reminders displayed.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel response-panel">
+                    <div class="panel-header">
+                        <span class="panel-bracket">[</span>
+                        <h2>JARVIS RESPONSE</h2>
+                        <span class="panel-bracket">]</span>
+                    </div>
+                    <div class="panel-body panel-scanlines">
+                        <div id="response" class="response-content">
+                            Standing by for your command...
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <footer class="command-bar">
+            <div class="command-bar-inner">
+                <span class="command-prompt">&gt;</span>
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Ask me anything..."
+                    autocomplete="off"
+                >
+                <button id="sendButton" type="button" aria-label="Send message">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
