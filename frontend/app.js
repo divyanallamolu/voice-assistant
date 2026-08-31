@@ -410,9 +410,15 @@ function connectToBackend() {
     setSystemStatus("● CONNECTING");
     setBodyState("connecting");
 
-    socket = new WebSocket(
-        "ws://127.0.0.1:8000/ws"
-    );
+    const protocol =
+        window.location.protocol === "https:"
+            ? "wss:"
+            : "ws:";
+
+    const wsUrl =
+        protocol + "//" + window.location.host + "/ws";
+
+    socket = new WebSocket(wsUrl);
 
 
     // ==================================================

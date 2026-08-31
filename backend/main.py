@@ -4,8 +4,10 @@ import json
 import os
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.staticfiles import StaticFiles
 from deepgram import AsyncDeepgramClient
 from deepgram.core.events import EventType
 
@@ -43,16 +45,9 @@ async def lifespan(app):
 
 app = FastAPI(lifespan=lifespan)
 
-
-# ============================================================
-# HOME
-# ============================================================
-
-@app.get("/")
-async def home():
-    return {
-        "message": "Voice Assistant Backend Running"
-    }
+FRONTEND_DIR = (
+    Path(__file__).resolve().parent.parent / "frontend"
+)
 
 
 # ============================================================
@@ -1067,3 +1062,41 @@ async def websocket_endpoint(websocket: WebSocket):
         await cleanup_deepgram()
 
         print("🧹 Connection cleanup complete.")
+
+
+# ============================================================
+# FRONTEND (must be registered after API/WebSocket routes)
+# ============================================================
+
+if FRONTEND_DIR.is_dir():
+
+    app.mount(
+        "/",
+        StaticFiles(
+            directory=str(FRONTEND_DIR),
+            html=True,
+        ),
+        name="frontend",
+    )
+
+else:
+
+    @app.get("/")
+    async def home():
+
+        return {
+            "message": "Voice Assistant Backend Running"
+        }
+
+
+if __name__ == "__main__":
+
+    import uvicorn
+
+    port = int(os.getenv("PORT", "8000"))
+
+    uvicorn.run(
+        "backend.main:app",
+        host="0.0.0.0",
+        port=port,
+    )
