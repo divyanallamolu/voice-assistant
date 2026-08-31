@@ -62,6 +62,19 @@ const toolStatus =
 const reminderFeed =
     document.getElementById("reminderFeed");
 
+const voiceStatus =
+    document.getElementById("voiceStatus");
+
+const VOICE_STATUS_LABELS = {
+    disconnected: "Offline",
+    connecting: "Connecting",
+    connected: "Ready",
+    listening: "Listening",
+    processing: "Thinking",
+    speaking: "Speaking",
+    error: "Error",
+};
+
 
 // ==================================================
 // UI STATE
@@ -71,6 +84,14 @@ function setBodyState(state) {
 
     document.body.className =
         "state-" + state;
+
+    if (voiceStatus) {
+
+        voiceStatus.textContent =
+            VOICE_STATUS_LABELS[state]
+            || state;
+
+    }
 
 }
 

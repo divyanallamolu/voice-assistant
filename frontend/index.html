@@ -7,65 +7,71 @@
     <title>JARVIS — Voice Assistant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="state-disconnected">
 
-    <div class="hud-background">
-        <div class="grid-overlay"></div>
-        <div class="radial-glow"></div>
-        <div class="scan-line"></div>
-        <div class="particle p1"></div>
-        <div class="particle p2"></div>
-        <div class="particle p3"></div>
-        <div class="particle p4"></div>
-        <div class="particle p5"></div>
+    <div class="scene-background" aria-hidden="true">
+        <img
+            src="assets/background.png"
+            alt=""
+            class="scene-background-image"
+            fetchpriority="high"
+        >
+        <div class="scene-overlay"></div>
     </div>
-
-    <div class="corner-bracket tl"></div>
-    <div class="corner-bracket tr"></div>
-    <div class="corner-bracket bl"></div>
-    <div class="corner-bracket br"></div>
-
-    <div class="hud-label hud-label-tl">SYSTEM ONLINE</div>
-    <div class="hud-label hud-label-tr">VOICE CHANNEL</div>
-    <div class="hud-label hud-label-bl">AUDIO STREAM</div>
-    <div class="hud-label hud-label-br">AI CORE</div>
-
-    <div class="hud-ring hud-ring-left"></div>
-    <div class="hud-ring hud-ring-right"></div>
 
     <div class="app-container">
 
-        <header class="hero">
-            <div class="hero-line"></div>
-            <h1 class="hero-title">JARVIS</h1>
-            <p class="hero-subtitle">ADVANCED VOICE INTELLIGENCE SYSTEM</p>
-            <div class="connection-bar">
-                <span class="connection-dot" id="connectionDot"></span>
+        <header class="app-header">
+            <div class="brand-block">
+                <div class="brand-row">
+                    <h1 class="brand-title">JARVIS</h1>
+                    <img
+                        src="assets/jarvis-brand.png"
+                        alt=""
+                        class="identity-eyes"
+                        width="32"
+                        height="40"
+                        aria-hidden="true"
+                    >
+                </div>
+                <p class="brand-tagline">Personal AI Assistant</p>
+            </div>
+
+            <div class="connection-pill" role="status" aria-live="polite">
+                <span class="connection-dot" id="connectionDot" aria-hidden="true"></span>
                 <span class="connection-label" id="status">DISCONNECTED</span>
             </div>
         </header>
 
         <main class="main-content">
 
-            <section class="core-section">
-                <div class="ai-core" id="aiCore">
-                    <div class="core-outer-glow"></div>
-                    <div class="core-ring ring-1"></div>
-                    <div class="core-ring ring-2"></div>
-                    <div class="core-ring ring-3"></div>
-                    <div class="core-ring ring-4"></div>
-                    <div class="core-center">
-                        <div class="core-pulse"></div>
+            <section class="voice-section" aria-label="Voice interaction">
+                <div class="voice-orb" id="aiCore">
+                    <div class="voice-orb-glow" aria-hidden="true"></div>
+                    <div class="voice-orb-ring voice-orb-ring-1" aria-hidden="true"></div>
+                    <div class="voice-orb-ring voice-orb-ring-2" aria-hidden="true"></div>
+                    <div class="voice-orb-core">
+                        <img
+                            src="assets/jarvis-interface.png"
+                            alt=""
+                            class="voice-orb-image"
+                            width="180"
+                            height="180"
+                            aria-hidden="true"
+                        >
                     </div>
                 </div>
 
+                <p class="voice-status" id="voiceStatus" aria-live="polite">Offline</p>
+                <p class="system-status" id="systemStatus" aria-hidden="true">● OFFLINE</p>
+
                 <button id="voiceButton" class="mic-button" type="button" aria-label="Toggle microphone">
-                    <span class="mic-button-ring"></span>
-                    <span class="mic-icon">
+                    <span class="mic-button-glow" aria-hidden="true"></span>
+                    <span class="mic-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
                             <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
@@ -73,81 +79,60 @@
                             <line x1="8" y1="22" x2="16" y2="22"/>
                         </svg>
                     </span>
-                    <span class="mic-label" id="micLabel">START LISTENING</span>
+                    <span class="mic-label" id="micLabel">Start Listening</span>
                 </button>
             </section>
 
-            <section class="panels-grid">
+            <section class="conversation-section" aria-label="Conversation">
 
-                <div class="panel status-panel">
-                    <div class="panel-header">
-                        <span class="panel-bracket">[</span>
-                        <h2>SYSTEM STATUS</h2>
-                        <span class="panel-bracket">]</span>
-                    </div>
-                    <div class="panel-body">
-                        <p class="system-status" id="systemStatus">● OFFLINE</p>
-                    </div>
-                    <div class="panel-footer">
-                        <span class="hud-tag">STT ENGINE</span>
-                        <span class="hud-tag">LLM ENGINE</span>
-                    </div>
-                </div>
-
-                <div class="panel transcript-panel">
-                    <div class="panel-header">
-                        <span class="panel-bracket">[</span>
-                        <h2>LIVE TRANSCRIPT</h2>
-                        <span class="panel-bracket">]</span>
-                    </div>
-                    <div class="panel-body panel-scanlines">
-                        <div id="liveTranscript" class="transcript-content">
-                            <span class="transcript-prefix">🎤</span>
+                <article class="glass-card transcript-card">
+                    <header class="card-header">
+                        <h2>Live Transcript</h2>
+                    </header>
+                    <div class="card-body">
+                        <div id="liveTranscript" class="transcript-content" aria-live="polite">
+                            <span class="transcript-prefix" aria-hidden="true">🎤</span>
                             <span class="transcript-text">Awaiting voice input...</span>
                         </div>
                     </div>
-                </div>
+                </article>
 
-                <div class="panel tool-panel">
-                    <div class="panel-header">
-                        <span class="panel-bracket">[</span>
-                        <h2>TOOL STATUS</h2>
-                        <span class="panel-bracket">]</span>
-                    </div>
-                    <div class="panel-body panel-scanlines">
-                        <div id="toolStatus" class="tool-status-content">
-                            <span class="tool-icon">🔧</span>
-                            <span class="tool-label">TOOL</span>
-                            <span class="tool-name" id="toolName">STANDBY</span>
-                            <span class="tool-state" id="toolState">READY</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel reminder-panel">
-                    <div class="panel-header">
-                        <span class="panel-bracket">[</span>
-                        <h2>REMINDERS</h2>
-                        <span class="panel-bracket">]</span>
-                    </div>
-                    <div class="panel-body panel-scanlines">
-                        <div id="reminderFeed" class="reminder-feed">
-                            No active reminders displayed.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel response-panel">
-                    <div class="panel-header">
-                        <span class="panel-bracket">[</span>
-                        <h2>JARVIS RESPONSE</h2>
-                        <span class="panel-bracket">]</span>
-                    </div>
-                    <div class="panel-body panel-scanlines">
-                        <div id="response" class="response-content">
+                <article class="glass-card response-card">
+                    <header class="card-header">
+                        <h2>JARVIS Response</h2>
+                    </header>
+                    <div class="card-body">
+                        <div id="response" class="response-content" aria-live="polite">
                             Standing by for your command...
                         </div>
                     </div>
+                </article>
+
+                <div class="meta-row">
+                    <article class="glass-card meta-card tool-panel">
+                        <header class="card-header">
+                            <h2>Tool</h2>
+                        </header>
+                        <div class="card-body">
+                            <div id="toolStatus" class="tool-status-content">
+                                <span class="tool-icon" aria-hidden="true">🔧</span>
+                                <span class="tool-label">Status</span>
+                                <span class="tool-name" id="toolName">Standby</span>
+                                <span class="tool-state" id="toolState">Ready</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="glass-card meta-card reminder-panel">
+                        <header class="card-header">
+                            <h2>Reminders</h2>
+                        </header>
+                        <div class="card-body">
+                            <div id="reminderFeed" class="reminder-feed">
+                                No active reminders displayed.
+                            </div>
+                        </div>
+                    </article>
                 </div>
 
             </section>
@@ -156,7 +141,7 @@
 
         <footer class="command-bar">
             <div class="command-bar-inner">
-                <span class="command-prompt">&gt;</span>
+                <label class="visually-hidden" for="messageInput">Message JARVIS</label>
                 <input
                     type="text"
                     id="messageInput"
@@ -164,7 +149,7 @@
                     autocomplete="off"
                 >
                 <button id="sendButton" type="button" aria-label="Send message">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12"/>
                         <polyline points="12 5 19 12 12 19"/>
                     </svg>
